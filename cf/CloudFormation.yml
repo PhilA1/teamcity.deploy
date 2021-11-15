@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ClusterName:
+    Type: String
+    Default: 'DEVECS'
+    Description: The cluster name or ARN to create the service in.
+  DesiredCount:
+    Type: Number
+    Default: '1'
+    Description: Number of tasks to schedule in on the cluster.  
+  MinimumDeploymentConfigurationTarget:
+     Type: Number
+     Default: '50'
+     Description: The minimum number of tasks, specified as a percentage of the DesiredCount value
+  MaximumDeploymentConfigurationTarget:
+     Type: Number
+     Default: '200'
+     Description: The maximum number of tasks, specified as a percentage of the DesiredCount value
+
+Resources:
+  ecsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: AssumeECStaskRole
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      RoleName: ecs-task-teamcity
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref 'AWS::StackName'
+      TaskRoleArn: !GetAtt ecsRole.Arn
+      ContainerDefinitions:
+      - Name: teamcity
+        Cpu: 0
+        MemoryReservation: 250
+        Essential: true
+        Image: 'jetbrains/teamcity-server'
+        PortMappings: 
+          - ContainerPort: 8111
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ClusterName
+      DesiredCount: !Ref DesiredCount
+      TaskDefinition: !Ref 'TaskDefinition'
+      DeploymentConfiguration:
+        MaximumPercent: !Ref 'MaximumDeploymentConfigurationTarget'
+        MinimumHealthyPercent: !Ref 'MinimumDeploymentConfigurationTarget'
+
+Outputs:
+  ecsservice:
+    Value: !Ref 'Service'
+  ecscluster:
+    Value: !Ref 'ClusterName'
+  taskdef:
+    Value: !Ref 'TaskDefinition'
