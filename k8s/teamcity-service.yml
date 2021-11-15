@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: teamcity
+  labels:
+    app: teamcity
+spec:
+  selector:
+    app: teamcity
+  type: LoadBalancer
+  ports:
+  - port: 8111
+    targetPort: 8111
