@@ -1,17 +1,26 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: teamcity
   labels:
     app: teamcity
 spec:
-  restartPolicy: Always
-  containers:
-    - name: teamcity
-      image: jetbrains/teamcity-server
-      ports:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teamcity
+  template:
+    metadata:
+      labels:
+        app: teamcity
+    spec:
+      restartPolicy: Always
+      containers:
         - name: teamcity
-          containerPort: 8111
-      resources:
-        limits:
-          memory: "2Gi"
+          image: jetbrains/teamcity-server
+          ports:
+            - name: teamcity
+              containerPort: 8111
+          resources:
+            limits:
+              memory: "2Gi"
