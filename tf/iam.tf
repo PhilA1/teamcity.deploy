@@ -15,14 +15,14 @@ data "aws_iam_policy_document" "trust_doc" {
 
 resource "aws_iam_role" "teamcity_role" {
   name               = "teamcity_role"
-  assume_role_policy = "${data.aws_iam_policy_document.trust_doc.json}"
+  assume_role_policy = data.aws_iam_policy_document.trust_doc.json
 }
 
 resource "aws_iam_role_policy" "teamcity_role_policy" {
   name = "teamcity_policy"
-  role = "${aws_iam_role.teamcity_role.id}"
+  role = aws_iam_role.teamcity_role.id
 
-   policy = <<POLICY
+  policy = <<POLICY
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -44,14 +44,14 @@ resource "aws_iam_role_policy" "teamcity_role_policy" {
 
 resource "aws_iam_role" "teamcity_service_role" {
   name               = "teamcity_service_role"
-  assume_role_policy = "${data.aws_iam_policy_document.trust_doc.json}"
+  assume_role_policy = data.aws_iam_policy_document.trust_doc.json
 }
 
 resource "aws_iam_role_policy" "teamcity_service_role_policy" {
   name = "teamcity_service_policy"
-  role = "${aws_iam_role.teamcity_service_role.id}"
+  role = aws_iam_role.teamcity_service_role.id
 
-   policy = <<POLICY
+  policy = <<POLICY
 {
     "Version": "2012-10-17",
     "Statement": [
