@@ -1,6 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      version = "~>3.65"
+    }
+  }
+}
 provider "aws" {
-  region  = "eu-west-1"
-  version = "3.65"
+  region = "eu-west-1"
 }
 
 # VARIABLES
@@ -36,12 +42,12 @@ data "aws_ecs_cluster" "ecs" {
 
 data "aws_ecs_task_definition" "teamcity" {
   task_definition = aws_ecs_task_definition.teamcity.family
-  depends_on      = ["aws_ecs_task_definition.teamcity"]
+  depends_on      = [aws_ecs_task_definition.teamcity]
 }
 
 # ECS RESOURCES
 resource "aws_ecs_task_definition" "teamcity" {
-  depends_on    = ["aws_iam_role.teamcity_role"]
+  depends_on    = [aws_iam_role.teamcity_role]
   family        = var.project_name
   task_role_arn = aws_iam_role.teamcity_role.arn
 
@@ -74,7 +80,7 @@ resource "aws_ecs_service" "teamcity" {
   cluster                            = data.aws_ecs_cluster.ecs.id
   desired_count                      = var.minimum_desired_count
   iam_role                           = aws_iam_role.teamcity_service_role.arn
-  depends_on                         = ["aws_alb_listener_rule.teamcity_https"]
+  depends_on                         = [aws_alb_listener_rule.teamcity_https]
   deployment_minimum_healthy_percent = var.minimum_deployment_config_target
   deployment_maximum_percent         = var.maximum_deployment_config_target
 
