@@ -16,11 +16,12 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-        - name: teamcity
+        - name: teamcity-server
           image: jetbrains/teamcity-server
           ports:
-            - name: teamcity
+            - name: dashboard
               containerPort: 8111
           resources:
             limits:
-              memory: "2Gi"
+              memory: "1Gi"
+              cpu: "250m"

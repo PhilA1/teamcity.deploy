@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: teamcity
+  name: teamcity-service
   labels:
     app: teamcity
 spec:
@@ -9,5 +9,6 @@ spec:
     app: teamcity
   type: LoadBalancer
   ports:
-  - port: 8111
+  - name: dashboardlb
+    port: 8111
     targetPort: 8111
