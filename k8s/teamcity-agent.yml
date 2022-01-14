@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tc
+  labels:
+    app: teamcityagent
+  name: teamcityagent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teamcityagent
+  strategy: {}
+  template:
+    metadata:
+      namespace: tc
+      labels:
+        app: teamcityagent
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: jetbrains/teamcity-agent
+        name: teamcity-agent
+        resources: 
+          limits:
+            memory: "1Gi"
+            cpu: "250m"

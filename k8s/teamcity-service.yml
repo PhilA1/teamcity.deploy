@@ -2,6 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: teamcity-service
+  namespace: tc
   labels:
     app: teamcity
 spec:

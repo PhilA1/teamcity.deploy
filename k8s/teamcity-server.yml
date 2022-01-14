@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: teamcity
+  namespace: tc
   labels:
     app: teamcity
 spec:
@@ -11,10 +12,12 @@ spec:
       app: teamcity
   template:
     metadata:
+      namespace: tc
       labels:
         app: teamcity
     spec:
       restartPolicy: Always
+      serviceAccountName: teamcity 
       containers:
         - name: teamcity-server
           image: jetbrains/teamcity-server
